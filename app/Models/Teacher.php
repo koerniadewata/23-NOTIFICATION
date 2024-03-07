@@ -10,5 +10,8 @@ class Teacher extends Model
     use HasFactory;
     protected $fillable = ['nip', 'name', 'address', 'profile'];
 
-
+    public function classroom()
+    {
+        return $this->hasMany(Homeroom::class, 'teachers_id', 'id');
+    }
 }

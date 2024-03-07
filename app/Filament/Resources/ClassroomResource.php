@@ -2,22 +2,24 @@
 
 namespace App\Filament\Resources;
 
-
+use Filament\Forms;
 use Filament\Tables;
-use App\Models\Periode;
 use Filament\Forms\Form;
+use App\Models\Classroom;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use App\Filament\Resources\PeriodeResource\Pages;
+use Illuminate\Database\Eloquent\Builder;
+use App\Filament\Resources\ClassroomResource\Pages;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use App\Filament\Resources\ClassroomResource\RelationManagers;
 
-class PeriodeResource extends Resource
+class ClassroomResource extends Resource
 {
-    protected static ?string $model = Periode::class;
+    protected static ?string $model = Classroom::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
 
     public static function form(Form $form): Form
     {
@@ -31,7 +33,8 @@ class PeriodeResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('name'),
+                TextColumn::make('name')
+                ->sortable()
             ])
             ->filters([
                 //
@@ -50,7 +53,19 @@ class PeriodeResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ManagePeriodes::route('/'),
+            'index' => Pages\ManageClassrooms::route('/'),
         ];
+    }
+
+    public static function getLabel(): ? string
+    {
+        $locale = app()->getLocale();
+        if($locale == 'id')
+        {
+            return "Ruang Kelas";
+        }else
+        {
+            return "Class Room";
+        }
     }
 }

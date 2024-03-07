@@ -2,7 +2,7 @@
 
 namespace App\Filament\Resources;
 
-use Filament\Forms;
+
 use Filament\Tables;
 use Filament\Forms\Set;
 use Filament\Forms\Form;
@@ -12,18 +12,13 @@ use App\Models\CategoryNilai;
 use Filament\Resources\Resource;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\TextInput;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use App\Filament\Resources\CategoryNilaiResource\Pages;
-use App\Filament\Resources\CategoryNilaiResource\RelationManagers;
 
 class CategoryNilaiResource extends Resource
 {
     protected static ?string $model = CategoryNilai::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
-
-    protected static ?string $navigationLabel = 'Category Nilai';
 
     public static function form(Form $form): Form
     {
@@ -65,4 +60,18 @@ class CategoryNilaiResource extends Resource
             'index' => Pages\ManageCategoryNilais::route('/'),
         ];
     }
+
+    public static function getLabel(): ? string
+    {
+        $locale = app()->getLocale();
+        if($locale == 'id')
+        {
+            return "Kategori Nilai";
+        }else
+        {
+            return "Category Nilai";
+        }
+    }
+    
+
 }

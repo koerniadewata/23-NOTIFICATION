@@ -3,24 +3,18 @@
 namespace App\Filament\Resources;
 
 use stdClass;
-use Filament\Forms;
 use Filament\Tables;
 use App\Models\Teacher;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
 use Filament\Resources\Resource;
-use Filament\Forms\Components\Tabs;
 use Filament\Forms\Components\Textarea;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\FileUpload;
-use Illuminate\Database\Eloquent\Builder;
 use App\Filament\Resources\TeacherResource\Pages;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
-use App\Filament\Resources\TeacherResource\RelationManagers;
-use App\Filament\Resources\TeacherResource\RelationManagers\ClassroomRelationManager;
 
 
 class TeacherResource extends Resource
@@ -90,4 +84,17 @@ class TeacherResource extends Resource
             'edit' => Pages\EditTeacher::route('/{record}/edit'),
         ];
     }
+
+    public static function getLabel(): ? string
+    {
+        $locale = app()->getLocale();
+        if($locale == 'id')
+        {
+            return "Pengajar";
+        }else
+        {
+            return "Teacher";
+        }
+    }
+
 }

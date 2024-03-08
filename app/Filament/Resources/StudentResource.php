@@ -8,6 +8,7 @@ use Filament\Tables;
 use App\Models\Student;
 use Filament\Forms\Form;
 use Filament\Tables\Table;
+use Table\Action\CreateAction;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
 use Filament\Tables\Columns\TextColumn;
@@ -90,6 +91,14 @@ class StudentResource extends Resource
                 Tables\Actions\BulkActionGroup::make([
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
+            ])
+            
+            // ->headerActions([
+            //     Tables\Actions\CreateAction::make(),
+            // ])
+
+            ->emptyStateActions([
+                Tables\Actions\CreateAction::make(),
             ]);
     }
 

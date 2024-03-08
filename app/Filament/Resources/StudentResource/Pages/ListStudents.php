@@ -2,9 +2,11 @@
 
 namespace App\Filament\Resources\StudentResource\Pages;
 
-use App\Filament\Resources\StudentResource;
 use Filament\Actions;
+use App\Models\Student;
+use Illuminate\Contracts\View\View;
 use Filament\Resources\Pages\ListRecords;
+use App\Filament\Resources\StudentResource;
 
 class ListStudents extends ListRecords
 {
@@ -15,5 +17,22 @@ class ListStudents extends ListRecords
         return [
             Actions\CreateAction::make(),
         ];
+    }
+
+    public function getHeader(): ?View
+    {
+        $data = Actions\CreateAction::make();
+        return view('filament.custom.upload-file', compact('data'));
+    }
+
+    public $file = '';
+
+    public function save()
+    {
+        Student::create([
+            'nis' => '123',
+            'name' => 'Try First',
+            'gender' => 'Male',
+        ]);
     }
 }

@@ -4,9 +4,11 @@ namespace App\Filament\Resources\StudentResource\Pages;
 
 use Filament\Actions;
 use App\Models\Student;
+use App\Imports\ImportStudent;
 use Illuminate\Contracts\View\View;
 use Filament\Resources\Pages\ListRecords;
 use App\Filament\Resources\StudentResource;
+use Maatwebsite\Excel\Facades\Excel;
 
 class ListStudents extends ListRecords
 {
@@ -29,10 +31,15 @@ class ListStudents extends ListRecords
 
     public function save()
     {
-        Student::create([
-            'nis' => '123',
-            'name' => 'Try First',
-            'gender' => 'Male',
-        ]);
+        if($this->file != '')
+        {
+            Excel::import(new ImportStudent, $this->file);
+        }
+
+        // Student::create([
+        //     'nis' => '123',
+        //     'name' => 'Try First',
+        //     'gender' => 'Male',
+        // ]);
     }
 }

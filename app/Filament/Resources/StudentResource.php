@@ -23,6 +23,7 @@ use Filament\Forms\Components\FileUpload;
 use Filament\Infolists\Components\TextEntry;
 use Illuminate\Database\Eloquent\Collection;
 use App\Filament\Resources\StudentResource\Pages;
+use Filament\Tables\Filters\SelectFilter;
 
 class StudentResource extends Resource
 {
@@ -35,29 +36,29 @@ class StudentResource extends Resource
         return $form
             ->schema([
                 TextInput::make('nis')
-                                    ->label('NIS'),
-                                TextInput::make('name')
-                                    ->label('Student Name')
-                                    ->required(),
-                                Select::make('gender')
-                                    ->options([
-                                        "Male" => "Male",
-                                        "Female" => "Female"
-                                    ]),
-                                DatePicker::make('birthday')
-                                    ->label('Birthday'),
-                                    Select::make('religion')
-                                        ->options([
-                                        "Islam" => "Islam",
-                                        "Katholik" => "Katholik",
-                                        "Protestan" => "Protestan",
-                                        "Hindu" => "Hindu",
-                                        "Budha" => "Budha",
-                                        "Konghuchu" => "Konghuchu"
-                                        ]),
-                                TextInput::make('contact'),
-                                FileUpload::make('profile')
-                                    ->directory('students')
+                    ->label('NIS'),
+                TextInput::make('name')
+                    ->label('Student Name')
+                    ->required(),
+                Select::make('gender')
+                    ->options([
+                        "Male" => "Male",
+                        "Female" => "Female"
+                    ]),
+                DatePicker::make('birthday')
+                    ->label('Birthday'),
+                    Select::make('religion')
+                        ->options([
+                        "Islam" => "Islam",
+                        "Katholik" => "Katholik",
+                        "Protestan" => "Protestan",
+                        "Hindu" => "Hindu",
+                        "Budha" => "Budha",
+                        "Konghuchu" => "Konghuchu"
+                        ]),
+                TextInput::make('contact'),
+                FileUpload::make('profile')
+                    ->directory('students')
             ]);
     }
 
@@ -76,20 +77,32 @@ class StudentResource extends Resource
                     }
                 ),
                 TextColumn::make('nis')
-                    ->label('NIS'),
+                    ->label('NIS')
+                    ->searchable(),
                 TextColumn::make('name')
-                    ->label('Student Name'),
+                    ->label('Student Name')                    
+                    ->searchable(),
                 TextColumn::make('gender'),
                 TextColumn::make('birthday')
-                    ->label('Birthday'),
-                TextColumn::make('religion'),
+                    ->label('Birthday')                    
+                    ->toggleable(isToggledHiddenByDefault:true),
+                TextColumn::make('religion')                
+                ->toggleable(isToggledHiddenByDefault:true),
                 TextColumn::make('contact'),
                 ImageColumn::make('profile'),
-                TextColumn::make('status')
+                TextColumn::make('status')                
+                ->toggleable(isToggledHiddenByDefault:false)
                     ->formatStateUsing(fn (string $state): string => ucwords("{$state}"))
             ])
             ->filters([
-                //
+                SelectFilter::make('status')
+                    ->multiple()
+                    ->options([
+                        'accept' => 'Accept',
+                        'off' => 'Off',
+                        'move' => 'Move',
+                        'grade' => 'Grade',
+                    ])
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
@@ -97,27 +110,27 @@ class StudentResource extends Resource
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
-                    BulkAction::make('Accept')
+                    BulkAction::make('Change Status')
                         ->icon('heroicon-m-check')
                         ->requiresConfirmation()
-                        ->action(function (Collection $records)
-                        {
-                            return $records->each->update(['status'=>'accept']);
+                        ->form([
+                            Select::make('Status')
+                            ->label('Status')
+                            ->options([
+                                'accept' => 'Accept',
+                                'off' => 'Off',
+                                'move' => 'Move',
+                                'grade' => 'Grade',
+                            ]),
+                        ])
+                        // Di dalam metode bulkActions
+                        ->action(function (Collection $records, array $data) {
+                            foreach ($records as $record) {
+                                Student::where('id', $record->id)->update(['status' => $data['Status']]);
+                            }
                         }),
-                    BulkAction::make('Off')
-                        ->icon('heroicon-m-x-circle')
-                        ->requiresConfirmation()
-                        ->action(function (Collection $records)
-                        {
-                            return $records->each(function ($record)
-                            {
-                                $id = $record->id;
-                                Student::where('id', $ids)->update(['status'=>'off']);
-                            });
-                        }),
-                        
-                    Tables\Actions\DeleteBulkAction::make(),
-                ]),
+
+                ])
             ])
             
             // ->headerActions([

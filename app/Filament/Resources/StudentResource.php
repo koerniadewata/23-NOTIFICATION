@@ -18,6 +18,9 @@ use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
 use App\Filament\Resources\StudentResource\Pages;
+use Filament\Infolists\Infolist;
+use Filament\Infolists\Components\TextEntry;
+use Filament\Pages\Page;
 
 class StudentResource extends Resource
 {
@@ -85,6 +88,7 @@ class StudentResource extends Resource
                 //
             ])
             ->actions([
+                Tables\Actions\ViewAction::make(),
                 Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
@@ -115,6 +119,7 @@ class StudentResource extends Resource
             'index' => Pages\ListStudents::route('/'),
             'create' => Pages\CreateStudent::route('/create'),
             'edit' => Pages\EditStudent::route('/{record}/edit'),
+            'view' => Pages\ViewStudent::route('/{record}'),
         ];
     }
 
@@ -128,5 +133,14 @@ class StudentResource extends Resource
         {
             return "Students";
         }
+    }
+
+    public static function infolist(Infolist $infolist): Infolist
+    {
+        return $infolist
+            ->schema([
+                TextEntry::make('nis'),
+                TextEntry::make('name')
+            ]);
     }
 }

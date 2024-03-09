@@ -7,20 +7,22 @@ use Filament\Forms;
 use Filament\Tables;
 use App\Models\Student;
 use Filament\Forms\Form;
+use Filament\Pages\Page;
 use Filament\Tables\Table;
 use Table\Action\CreateAction;
+use Filament\Infolists\Infolist;
 use Filament\Resources\Resource;
 use Filament\Forms\Components\Select;
+use Filament\Tables\Actions\BulkAction;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Contracts\HasTable;
 use Filament\Forms\Components\TextInput;
 use Filament\Tables\Columns\ImageColumn;
 use Filament\Forms\Components\DatePicker;
 use Filament\Forms\Components\FileUpload;
-use App\Filament\Resources\StudentResource\Pages;
-use Filament\Infolists\Infolist;
 use Filament\Infolists\Components\TextEntry;
-use Filament\Pages\Page;
+use Illuminate\Database\Eloquent\Collection;
+use App\Filament\Resources\StudentResource\Pages;
 
 class StudentResource extends Resource
 {
@@ -82,17 +84,38 @@ class StudentResource extends Resource
                     ->label('Birthday'),
                 TextColumn::make('religion'),
                 TextColumn::make('contact'),
-                ImageColumn::make('profile')
+                ImageColumn::make('profile'),
+                TextColumn::make('status')
+                    ->formatStateUsing(fn (string $state): string => ucwords("{$state}"))
             ])
             ->filters([
                 //
             ])
             ->actions([
                 Tables\Actions\ViewAction::make(),
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
+                    BulkAction::make('Accept')
+                        ->icon('heroicon-m-check')
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records)
+                        {
+                            return $records->each->update(['status'=>'accept']);
+                        }),
+                    BulkAction::make('Off')
+                        ->icon('heroicon-m-x-circle')
+                        ->requiresConfirmation()
+                        ->action(function (Collection $records)
+                        {
+                            return $records->each(function ($record)
+                            {
+                                $id = $record->id;
+                                Student::where('id', $ids)->update(['status'=>'off']);
+                            });
+                        }),
+                        
                     Tables\Actions\DeleteBulkAction::make(),
                 ]),
             ])

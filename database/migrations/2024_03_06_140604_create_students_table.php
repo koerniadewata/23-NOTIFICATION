@@ -20,6 +20,7 @@ return new class extends Migration
             $table->enum('religion',['Islam', 'Katholik', 'Protestan', 'Hindu', 'Budha', 'Konghuchu'])->default('Islam');
             $table->string('contact')->nullable();
             $table->string('profile')->nullable();
+            $table->enum('status',['accept', 'off', 'move', 'grade']);
             $table->timestamps();
         });
     }

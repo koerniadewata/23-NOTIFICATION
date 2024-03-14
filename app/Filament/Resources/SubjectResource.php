@@ -2,10 +2,12 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\ClassroomResource\Pages;
-use App\Filament\Resources\ClassroomResource\RelationManagers\SubjectsRelationManager;
-use App\Models\Classroom;
+use App\Filament\Resources\SubjectResource\Pages;
+use App\Filament\Resources\SubjectResource\RelationManagers;
+use App\Models\Subject;
+use Filament\Forms;
 use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Hidden;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Forms\Set;
@@ -13,23 +15,23 @@ use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Columns\TextColumn;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Closure;
+use Filament\Forms\Get;
+use Illuminate\Support\Str;
 
-class ClassroomResource extends Resource
+class SubjectResource extends Resource
 {
-    protected static ?string $model = Classroom::class;
+    protected static ?string $model = Subject::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
-    protected static ?string $navigationLabel = "Class Room";
+    protected static ?string $navigationLabel = "Subject";
 
-    protected static ?string $navigationGroup = 'Source';
+    protected static ?string $navigationGroup = 'Academic';
 
-    // protected static bool $shouldRegisterNavigation = false;
-
-    protected static ?int $navigationSort = 32;
-
-
+    protected static ?int $navigationSort = 24;
 
     public static function form(Form $form): Form
     {
@@ -37,8 +39,9 @@ class ClassroomResource extends Resource
             ->schema([
                 Card::make()
                     ->schema([
-                        TextInput::make('name')                        
-                    ])
+                        TextInput::make('kode'),
+                        TextInput::make('name')
+                    ])->columns(2)
             ]);
     }
 
@@ -46,6 +49,7 @@ class ClassroomResource extends Resource
     {
         return $table
             ->columns([
+                TextColumn::make('kode'),
                 TextColumn::make('name')
             ])
             ->filters([
@@ -67,16 +71,16 @@ class ClassroomResource extends Resource
     public static function getRelations(): array
     {
         return [
-            SubjectsRelationManager::class
+            //
         ];
     }
 
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListClassrooms::route('/'),
-            'create' => Pages\CreateClassroom::route('/create'),
-            'edit' => Pages\EditClassroom::route('/{record}/edit'),
+            'index' => Pages\ListSubjects::route('/'),
+            'create' => Pages\CreateSubject::route('/create'),
+            'edit' => Pages\EditSubject::route('/{record}/edit'),
         ];
     }
 }

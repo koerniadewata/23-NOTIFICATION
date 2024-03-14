@@ -14,10 +14,5 @@
         height: 100
     });
 
-    function makeCode() {
-        var elText = "halooo";
-        qrcode.makeCode(elText);
-    }
 
-    makeCode();
 </script>

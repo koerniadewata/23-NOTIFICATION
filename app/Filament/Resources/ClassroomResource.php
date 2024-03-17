@@ -29,6 +29,13 @@ class ClassroomResource extends Resource
 
     protected static ?int $navigationSort = 32;
 
+    public static function shouldRegisterNavigation():bool
+    {
+        if(auth()->user()->can('classroom'))
+            return true;
+        else
+            return false;
+    }
 
 
     public static function form(Form $form): Form

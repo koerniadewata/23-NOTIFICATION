@@ -13,7 +13,10 @@ class ClassroomPolicy
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        if($user()->can('classroom'))
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -21,7 +24,10 @@ class ClassroomPolicy
      */
     public function view(User $user, Classroom $classroom): bool
     {
-        return true;
+        if($user()->can('classroom'))
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -29,7 +35,10 @@ class ClassroomPolicy
      */
     public function create(User $user): bool
     {
-        return true;
+        if($user()->can('classroom'))
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -37,7 +46,10 @@ class ClassroomPolicy
      */
     public function update(User $user, Classroom $classroom): bool
     {
-        return true;
+        if($user()->can('classroom'))
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -45,7 +57,10 @@ class ClassroomPolicy
      */
     public function delete(User $user, Classroom $classroom): bool
     {
-        return true;
+        if($user()->can('classroom'))
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -53,7 +68,10 @@ class ClassroomPolicy
      */
     public function restore(User $user, Classroom $classroom): bool
     {
-        return true;
+        if($user()->can('classroom'))
+            return true;
+        else
+            return false;
     }
 
     /**
@@ -61,6 +79,9 @@ class ClassroomPolicy
      */
     public function forceDelete(User $user, Classroom $classroom): bool
     {
-        return true;
+        if($user()->can('classroom'))
+            return true;
+        else
+            return false;
     }
 }

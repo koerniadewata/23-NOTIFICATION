@@ -16,9 +16,9 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Support\Collection;
 
-class User extends Authenticatable implements HasTenants
+class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable;
 
     /**
      * The attributes that are mass assignable.
@@ -56,23 +56,23 @@ class User extends Authenticatable implements HasTenants
         return $this->belongsToMany(Role::class, 'model_has_roles', 'model_id', 'role_id');
     }
 
-    public function getTenants(Panel $panel): Collection
-    {
-        return $this->teams;
-    }
+    // public function getTenants(Panel $panel): Collection
+    // {
+    //     return $this->teams;
+    // }
 
-    public function teams(): BelongsToMany
-    {
-        return $this->belongsToMany(Team::class);
-    }
+    // public function teams(): BelongsToMany
+    // {
+    //     return $this->belongsToMany(Team::class);
+    // }
 
-    public function canAccessTenant(Model $tenant): bool
-    {
-        return $this->teams->contains($tenant);
-    }
+    // public function canAccessTenant(Model $tenant): bool
+    // {
+    //     return $this->teams->contains($tenant);
+    // }
 
-    public function team()
-    {
-        return $this->belongsToMany(Team::class);
-    }
+    // public function team()
+    // {
+    //     return $this->belongsToMany(Team::class);
+    // }
 }
